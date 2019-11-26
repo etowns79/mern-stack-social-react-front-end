@@ -1,16 +1,13 @@
 import React, { Component } from 'react'
 import Alert from '../core/Alert';
 
-export default class Signup extends Component {
-
+export default class Signin extends Component {
     state = {
-        name: "",
-        email: "",
-        password: "",
-        error: "",
-        message: false
+        email: '',
+        password: '',
+        error: '',
+        redirectToReferer: false
     }
-
 
     handleChange = (name) => (event) => {
         this.setState({ error: "" })
@@ -19,26 +16,26 @@ export default class Signup extends Component {
 
     clickSubmit = (event) => {
         event.preventDefault();
-        const { name, email, password } = this.state;
+        const { email, password } = this.state;
         const user = {
-            name,
             email,
-            password,
-
+            password
         }
 
-
-        this.signup(user)
+        this.signin(user)
             .then(data => {
                 if (data.error) {
                     this.setState({ error: data.error })
 
-                } else this.setState({ error: "", name: "", email: "", password: "", message: true })
+                } else {
+                    //authenticate
+                    //redirect
+                }
             })
     }
 
-    signup = (user) => {
-        return fetch("http://localhost:8080/api/auth/signup", {
+    signin = (user) => {
+        return fetch("http://localhost:8080/api/auth/signin", {
             method: "POST",
             headers: {
                 Accept: "application/json",
@@ -52,20 +49,17 @@ export default class Signup extends Component {
     }
 
     render() {
-        const { name, email, password, error, message } = this.state
+        const { email, password, error } = this.state;
         return (
             <div className="container">
-                <h2 className="mt-5 mb-5">Signup</h2>
+                <h2 className="mt-5 mb-5">Signin</h2>
 
                 <Alert status="alert alert-danger" error={error} />
-                <Alert status="alert alert-success" message={message} />
+
 
                 <form action="">
 
-                    <div className="form-group">
-                        <label className="text-muted">Name</label>
-                        <input onChange={this.handleChange("name")} className="form-control" type="text" name="name" id="name" value={name} />
-                    </div>
+
                     <div className="form-group">
                         <label className="text-muted">Email</label>
                         <input onChange={this.handleChange("email")} className="form-control" type="email" name="email" id="email" value={email} />
