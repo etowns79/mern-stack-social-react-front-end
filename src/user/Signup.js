@@ -1,4 +1,5 @@
 import React, { Component } from 'react'
+import Alert from '../core/Alert';
 
 export default class Signup extends Component {
 
@@ -6,23 +7,38 @@ export default class Signup extends Component {
         name: "",
         email: "",
         password: "",
-        error: ""
+        error: "",
+        message: false
     }
 
 
     handleChange = (name) => (event) => {
+        this.setState({ error: "" })
         this.setState({ [name]: event.target.value })
     }
 
-    clickSubmit = event => {
+    clickSubmit = (event) => {
         event.preventDefault();
         const { name, email, password } = this.state;
         const user = {
             name,
             email,
-            password
+            password,
+
         }
-        fetch("http://localhost:8080/api/auth/signup", {
+
+
+        this.signup(user)
+            .then(data => {
+                if (data.error) {
+                    this.setState({ error: data.error })
+
+                } else this.setState({ error: "", name: "", email: "", password: "", message: true })
+            })
+    }
+
+    signup = (user) => {
+        return fetch("http://localhost:8080/api/auth/signup", {
             method: "POST",
             headers: {
                 Accept: "application/json",
@@ -31,16 +47,21 @@ export default class Signup extends Component {
             body: JSON.stringify(user)
         })
             .then(response => {
-                return response.json
+                return response.json();
             }).catch(err => console.log(err))
     }
 
     render() {
-        const { name, email, password } = this.state
+        const { name, email, password, error, message } = this.state
         return (
             <div className="container">
                 <h2 className="mt-5 mb-5">Signup</h2>
+
+                <Alert status="alert alert-danger" error={error} />
+                <Alert status="alert alert-success" message={message} />
+
                 <form action="">
+
                     <div className="form-group">
                         <label className="text-muted">Name</label>
                         <input onChange={this.handleChange("name")} className="form-control" type="text" name="name" id="name" value={name} />
@@ -57,7 +78,7 @@ export default class Signup extends Component {
                         Submit
                     </button>
                 </form>
-            </div>
+            </div >
         )
     }
 }
