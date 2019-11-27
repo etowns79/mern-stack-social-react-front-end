@@ -21,6 +21,7 @@ export default class Signin extends Component {
             localStorage.setItem("jwt", JSON.stringify(jwt))
             next();
         }
+
     }
 
     clickSubmit = (event) => {
@@ -85,7 +86,7 @@ export default class Signin extends Component {
                         <label className="text-muted">Password</label>
                         <input onChange={this.handleChange("password")} className="form-control" type="password" name="password" id="password" value={password} />
                     </div>
-                    <button onClick={this.clickSubmit} className="btn btn-raised">
+                    <button onClick={this.clickSubmit} className="btn btn-raised btn-primary">
                         Submit
                     </button>
                 </form>
